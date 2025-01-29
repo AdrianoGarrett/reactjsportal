@@ -1,27 +1,24 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { AuthProvider } from './AuthContext';
-import ProtectedRoute from './ProtectedRoute';
-import Login from './componentes/Login';
-import MainPage from './componentes/MainPage';
-import Dashboard from './componentes/Dashboard';
-import ListPaginas from './componentes/ListPaginas';
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { AuthProvider } from "./AuthContext";
+import ProtectedRoute from "./ProtectedRoute";
+import Login from "./componentes/Login";
+import MainPage from "./componentes/MainPage";
+import Dashboard from "./componentes/Dashboard";
+import ListPaginas from "./componentes/ListPaginas";
+import Customers from "./componentes/Customers";
 
 const App = () => {
   return (
-    <AuthProvider> {/* Provedor do contexto de autenticação */}
+    <AuthProvider>
       <Router>
         <Routes>
-          {/* Rota pública */}
           <Route path="/" element={<Login />} />
-
-          {/* Rota protegida */}
           <Route
             path="/mainpage"
             element={
               <ProtectedRoute>
                 <MainPage />
-                <ListPaginas/>
+                <ListPaginas />
               </ProtectedRoute>
             }
           />
@@ -29,10 +26,21 @@ const App = () => {
             path="/dashboard"
             element={
               <ProtectedRoute>
-                <Dashboard/>
+                <Dashboard />
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/customers"
+            element={
+              <ProtectedRoute>
+                <Customers />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* 🚀 Evita erro ao recarregar a página */}
+          <Route path="*" element={<h1>Página não encontrada</h1>} />
         </Routes>
       </Router>
     </AuthProvider>

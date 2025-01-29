@@ -1,14 +1,22 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-// Criação do contexto
 const AuthContext = createContext();
 
-// Provedor do contexto
 export const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // Estado de autenticação
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return localStorage.getItem("token") ? true : false;
+  });
 
-  const login = () => setIsAuthenticated(true); // Simula login
-  const logout = () => setIsAuthenticated(false); // Simula logout
+  const login = (token) => {
+    localStorage.setItem("token", token);
+    setIsAuthenticated(true);
+  };
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    setIsAuthenticated(false);
+  };
 
   return (
     <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
@@ -17,5 +25,6 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-// Hook para usar o contexto
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+  return useContext(AuthContext);
+};

@@ -1,16 +1,16 @@
-import React from 'react';
-import { Navigate } from 'react-router-dom';
-import { useAuth } from './AuthContext';
+import { Navigate } from "react-router-dom";
+import { useAuth } from "./AuthContext";
 
 const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated } = useAuth(); // Verifica se está autenticado
+  const { isAuthenticated } = useAuth();
 
-  // Se não estiver autenticado, redireciona para a página de login
+  console.log("ProtectedRoute -> isAuthenticated:", isAuthenticated);
+
   if (!isAuthenticated) {
+    console.warn("🔴 Usuário não autenticado! Redirecionando para login...");
     return <Navigate to="/" />;
   }
 
-  // Renderiza o componente protegido se autenticado
   return children;
 };
 
