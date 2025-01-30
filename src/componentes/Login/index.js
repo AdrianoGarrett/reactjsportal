@@ -3,32 +3,36 @@ import { Button, Form, Input } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../AuthContext'; // Importa o contexto de autenticação
 
-const onFinish = async (values) => {
-  try {
-    const response = await fetch('http://localhost:8080/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(values),
-    });
+const Login = () => { // ✅ Criamos a função que define o componente Login
+  const navigate = useNavigate();
+  const { login } = useAuth(); // Obtém a função login do contexto de autenticação
 
-    if (response.ok) {
-      const data = await response.json();
-      console.log('Response from API:', data);
+  const onFinish = async (values) => {
+    try {
+      const response = await fetch('http://localhost:8080/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(values),
+      });
 
-      localStorage.setItem("token", data.token); // Salva o token no localStorage
-      login(data.token); // Atualiza o contexto de autenticação
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Response from API:', data);
 
-      navigate('/mainpage');
-    } else {
-      alert('Erro no login. Verifique suas credenciais.');
+        localStorage.setItem("token", data.token); // Salva o token no localStorage
+        login(data.token); // Atualiza o contexto de autenticação
+
+        navigate('/mainpage');
+      } else {
+        alert('Erro no login. Verifique suas credenciais.');
+      }
+    } catch (error) {
+      console.error('Erro ao conectar-se à API:', error);
+      alert('Não foi possível conectar ao servidor.');
     }
-  } catch (error) {
-    console.error('Erro ao conectar-se à API:', error);
-    alert('Não foi possível conectar ao servidor.');
-  }
-};
+  };
 
-  return (
+  return ( // ✅ Agora o return está dentro da função Login()
     <div
       style={{
         display: 'flex',
