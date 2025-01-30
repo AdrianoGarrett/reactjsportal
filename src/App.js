@@ -4,7 +4,6 @@ import ProtectedRoute from "./ProtectedRoute";
 import Login from "./componentes/Login";
 import MainPage from "./componentes/MainPage";
 import Dashboard from "./componentes/Dashboard";
-import ListPaginas from "./componentes/ListPaginas";
 import Customers from "./componentes/Customers";
 
 const App = () => {
@@ -18,7 +17,6 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <MainPage />
-                <ListPaginas />
               </ProtectedRoute>
             }
           />

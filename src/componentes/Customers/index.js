@@ -3,15 +3,16 @@ import { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { CircularProgress, TextField, Button, Box } from "@mui/material";
 import axios from "axios";
+import Sidebar from '../components/Sidebar';
 
 export default function Customers() {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [newCustomer, setNewCustomer] = useState({
-    first_name: "",
-    last_name: "",
+    firstName: "",
+    lastName: "",
     email: "",
-    phone_number: "",
+    phoneNumber: "",
     city: "",
     state: "",
     country: "",
@@ -50,10 +51,10 @@ export default function Customers() {
       .then((response) => {
         setRows([...rows, { id: response.data.id, ...response.data }]);
         setNewCustomer({
-          first_name: "",
-          last_name: "",
+          firstName: "",
+          lastName: "",
           email: "",
-          phone_number: "",
+          phoneNumber: "",
           city: "",
           state: "",
           country: "",
@@ -67,10 +68,10 @@ export default function Customers() {
 
   const columns = [
     { field: "id", headerName: "ID", width: 90 },
-    { field: "first_name", headerName: "First Name", width: 150 },
-    { field: "last_name", headerName: "Last Name", width: 150 },
+    { field: "firstName", headerName: "First Name", width: 150 },
+    { field: "lastName", headerName: "Last Name", width: 150 },
     { field: "email", headerName: "Email", width: 200 },
-    { field: "phone_number", headerName: "Phone", width: 150 },
+    { field: "phoneNumber", headerName: "Phone", width: 150 },
     { field: "city", headerName: "City", width: 120 },
     { field: "state", headerName: "State", width: 120 },
     { field: "country", headerName: "Country", width: 150 },
@@ -78,6 +79,9 @@ export default function Customers() {
   ];
 
   return (
+    <Box sx={{ display: "flex", height: "100vh" }}>
+    {/* Sidebar */}
+    <Sidebar />
     <div style={{ display: "flex", width: "100vw", height: "100vh" }}>
       {/* Lateral esquerda com 30% da tela */}
       <div style={{ width: "20%", backgroundColor: "#800000" }}></div>
@@ -85,10 +89,10 @@ export default function Customers() {
       {/* Conteúdo principal com 70% da tela */}
       <div style={{ width: "70%", padding: "20px" }}>
         <Box component="form" onSubmit={handleSubmit} sx={{ display: "flex", flexWrap: "wrap", gap: 2, padding: 2 }}>
-          <TextField label="First Name" name="first_name" value={newCustomer.first_name} onChange={handleInputChange} required />
-          <TextField label="Last Name" name="last_name" value={newCustomer.last_name} onChange={handleInputChange} required />
+          <TextField label="First Name" name="firstName" value={newCustomer.firstName} onChange={handleInputChange} required />
+          <TextField label="Last Name" name="lastName" value={newCustomer.lastName} onChange={handleInputChange} required />
           <TextField label="Email" name="email" value={newCustomer.email} onChange={handleInputChange} required />
-          <TextField label="Phone" name="phone_number" value={newCustomer.phone_number} onChange={handleInputChange} required />
+          <TextField label="Phone" name="phoneNumber" value={newCustomer.phoneNumber} onChange={handleInputChange} required />
           <TextField label="City" name="city" value={newCustomer.city} onChange={handleInputChange} required />
           <TextField label="State" name="state" value={newCustomer.state} onChange={handleInputChange} required />
           <TextField label="Country" name="country" value={newCustomer.country} onChange={handleInputChange} required />
@@ -107,5 +111,6 @@ export default function Customers() {
         </div>
       </div>
     </div>
+    </Box>
   );
 }
