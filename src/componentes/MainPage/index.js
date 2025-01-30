@@ -1,6 +1,6 @@
 import React from 'react';
 
-const MainPage = () => {
+const Dashboard = () => {
   return (
     <div
       style={{
@@ -11,9 +11,9 @@ const MainPage = () => {
         backgroundColor: '#e6f7ff',
       }}
     >
-      <h1>Bem-vindo a pagina principal!</h1>
+      <h1>Bem-vindo ao Dashboard!</h1>
     </div>
   );
 };
 
-export default MainPage;
+export default Dashboard;
