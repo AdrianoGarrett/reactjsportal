@@ -1,9 +1,9 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { CircularProgress, TextField, Button, Box } from "@mui/material";
+import { CircularProgress, TextField, Button, Box, MenuItem, Select, FormControl, InputLabel } from "@mui/material";
 import axios from "axios";
-import Sidebar from '../components/Sidebar';
+import Sidebar from "../components/Sidebar";
 
 export default function Customers() {
   const [rows, setRows] = useState([]);
@@ -22,14 +22,23 @@ export default function Customers() {
   useEffect(() => {
     fetchCustomers();
   }, []);
-
+  const companyId = localStorage.getItem("companyId");
+  
   const fetchCustomers = () => {
+    setLoading(true);
     axios
-      .get("http://localhost:8080/api/customers")
+      .get(`http://localhost:8080/api/customers/${companyId}`)
       .then((response) => {
-        const data = response.data.map((customer, index) => ({
-          id: customer.id || index + 1,
-          ...customer,
+        const data = response.data.map((customer) => ({
+          id: customer.id,
+          firstName: customer.firstName,
+          lastName: customer.lastName,
+          email: customer.email,
+          phoneNumber: customer.phoneNumber || customer.PhoneNumber,
+          city: customer.city,
+          state: customer.state,
+          country: customer.country,
+          gender: customer.gender,
         }));
         setRows(data);
         setLoading(false);
@@ -46,10 +55,28 @@ export default function Customers() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+   const customerData = { ...newCustomer, companyId: parseInt(companyId, 10) };
+
     axios
-      .post("http://localhost:8080/api/customers", newCustomer)
+      .post("http://localhost:8080/api/customers", customerData)
       .then((response) => {
-        setRows([...rows, { id: response.data.id, ...response.data }]);
+        const newRow = {
+          id: response.data.id,
+          companyId: companyId,
+          firstName: response.data.firstName,
+          lastName: response.data.lastName,
+          email: response.data.email,
+          phoneNumber: response.data.phoneNumber || response.data.PhoneNumber,
+          city: response.data.city,
+          state: response.data.state,
+          country: response.data.country,
+          gender: response.data.gender,
+        };
+
+        // Atualiza as linhas do DataGrid com o novo cliente
+        setRows((prevRows) => [...prevRows, newRow]);
+
+        // Limpa os campos após a submissão
         setNewCustomer({
           firstName: "",
           lastName: "",
@@ -60,6 +87,9 @@ export default function Customers() {
           country: "",
           gender: "",
         });
+        
+        // Recarrega os dados do cliente para garantir que a inserção seja refletida
+        fetchCustomers();
       })
       .catch((error) => {
         console.error("Erro ao adicionar cliente:", error);
@@ -80,14 +110,9 @@ export default function Customers() {
 
   return (
     <Box sx={{ display: "flex", height: "100vh" }}>
-    {/* Sidebar */}
-    <Sidebar />
-    <div style={{ display: "flex", width: "100vw", height: "100vh" }}>
-      {/* Lateral esquerda com 30% da tela */}
-      <div style={{ width: "20%", backgroundColor: "#800000" }}></div>
+      <Sidebar />
 
-      {/* Conteúdo principal com 70% da tela */}
-      <div style={{ width: "70%", padding: "20px" }}>
+      <Box sx={{ display: "flex", flexDirection: "column", width: "100%", padding: 2 }}>
         <Box component="form" onSubmit={handleSubmit} sx={{ display: "flex", flexWrap: "wrap", gap: 2, padding: 2 }}>
           <TextField label="First Name" name="firstName" value={newCustomer.firstName} onChange={handleInputChange} required />
           <TextField label="Last Name" name="lastName" value={newCustomer.lastName} onChange={handleInputChange} required />
@@ -96,21 +121,33 @@ export default function Customers() {
           <TextField label="City" name="city" value={newCustomer.city} onChange={handleInputChange} required />
           <TextField label="State" name="state" value={newCustomer.state} onChange={handleInputChange} required />
           <TextField label="Country" name="country" value={newCustomer.country} onChange={handleInputChange} required />
-          <TextField label="Gender" name="gender" value={newCustomer.gender} onChange={handleInputChange} required />
+          <FormControl required sx={{ width: "20%"}}>
+          <InputLabel>Gender</InputLabel>
+            <Select
+              name="gender"
+              value={newCustomer.gender}
+              onChange={handleInputChange}
+              label="Gender"
+            >
+              <MenuItem value="female">Female</MenuItem>
+              <MenuItem value="male">Male</MenuItem>
+              <MenuItem value="other">Other</MenuItem>
+            </Select>
+          </FormControl>
+
           <Button type="submit" variant="contained" color="primary">
             Add Customer
           </Button>
         </Box>
 
-        <div style={{ height: 400 }}>
+        <Box sx={{ height: 400 }}>
           {loading ? (
             <CircularProgress />
           ) : (
             <DataGrid rows={rows} columns={columns} getRowId={(row) => row.id} density="compact" hideFooter />
           )}
-        </div>
-      </div>
-    </div>
+        </Box>
+      </Box>
     </Box>
   );
 }

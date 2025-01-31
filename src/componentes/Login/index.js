@@ -19,7 +19,8 @@ const Login = () => { // ✅ Criamos a função que define o componente Login
         const data = await response.json();
         console.log('Response from API:', data);
 
-        localStorage.setItem("token", data.token); // Salva o token no localStorage
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("userId", data.id);
         login(data.token); // Atualiza o contexto de autenticação
 
         navigate('/mainpage');
