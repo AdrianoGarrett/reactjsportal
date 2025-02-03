@@ -5,6 +5,7 @@ import Login from "./componentes/Login";
 import MainPage from "./componentes/MainPage";
 import Dashboard from "./componentes/Dashboard";
 import Customers from "./componentes/Customers";
+import Products from "./componentes/Products";
 
 const App = () => {
   return (
@@ -25,6 +26,14 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/products"
+            element={
+              <ProtectedRoute>
+                <Products />
               </ProtectedRoute>
             }
           />
