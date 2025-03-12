@@ -55,7 +55,7 @@ export default function Customers() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-   const customerData = { ...newCustomer, companyId: parseInt(companyId, 10) };
+   const customerData = { ...newCustomer, companyId };
 
     axios
       .post("http://localhost:8080/api/customers", customerData)
